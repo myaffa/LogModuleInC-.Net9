@@ -1,6 +1,6 @@
 ﻿using System.Runtime.CompilerServices;
 
-namespace LogModule.Interfaces {
+namespace SAI.LogModule.Interfaces {
 	/// <summary>
 	/// Defines the interface for logging functionality in the application.
 	/// Provides methods for logging messages with different log levels (e.g., Information, Error, Warning, Debug, Fatal, Trace)

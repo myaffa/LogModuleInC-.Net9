@@ -1,10 +1,9 @@
-﻿using LogModule.Configuration;
-using LogModule.Interfaces;
+﻿using SAI.LogModule.Interfaces;
 using Serilog;
 using Serilog.Context;
 using System.Runtime.CompilerServices;
 
-namespace LogModule.Services {
+namespace SAI.LogModule.Services {
 	/// <inheritdoc/>
 	public class LogsManager(ILogger Logger) : ILogsManager {
 		private const int fixedLengthForComponentName = 20;

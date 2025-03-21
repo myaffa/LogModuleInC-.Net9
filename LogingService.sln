@@ -3,7 +3,12 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.12.35527.113
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LogModule", "LogModule\LogModule.csproj", "{DBEAEC4C-79C1-4BE7-9B1F-BF89456F4DD8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SAI.LogModule", "LogModule\SAI.LogModule.csproj", "{DBEAEC4C-79C1-4BE7-9B1F-BF89456F4DD8}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{A0B3ADCC-69E1-49DB-9ABB-D940F2224125}"
+	ProjectSection(SolutionItems) = preProject
+		.gitignore = .gitignore
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

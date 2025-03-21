@@ -1,10 +1,10 @@
-﻿using LogModule.Interfaces;
-using LogModule.Services;
+﻿using SAI.LogModule.Interfaces;
+using SAI.LogModule.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
 
-namespace LogModule.Configuration {
+namespace SAI.LogModule.Configuration {
 	/// <summary>
 	/// Static class that creates an instance of LogsManager based on the internal Serilog configuration.
 	/// </summary>
