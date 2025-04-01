@@ -27,12 +27,12 @@ namespace SAI.LogModule.Configuration {
 				.Build();
 
 			if (!string.IsNullOrEmpty(logConfig.LogServiceFilePath)) {
-				string logPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ServiceLog\\logMT5.txt");
+				string logPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory);
 
 				var section = serilogConfig.GetSection("Serilog:WriteTo");
 				foreach (var item in section.GetChildren()) {
 					if (item.GetValue<string>("Name") == "File") {
-						item.GetSection("Args").GetSection("path").Value = logPath;
+						item.GetSection("Args").GetSection("path").Value = logPath+ item.GetSection("Args").GetSection("path").Value;
 					}
 				}
 			}
