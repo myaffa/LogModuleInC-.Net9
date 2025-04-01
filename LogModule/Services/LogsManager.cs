@@ -5,8 +5,14 @@ using System.Runtime.CompilerServices;
 
 namespace SAI.LogModule.Services {
 	/// <inheritdoc/>
-	public class LogsManager(ILogger Logger) : ILogsManager {
-		private const int fixedLengthForComponentName = 20;
+	public class LogsManager : ILogsManager {
+		private readonly int _fixedLengthForComponentName;
+		private readonly ILogger Logger;
+
+		public LogsManager(ILogger logger, int fixedLengthForComponentName = 20) {
+			Logger = logger;
+			_fixedLengthForComponentName = fixedLengthForComponentName;
+		}
 
 		private enum EnLogType {
 			Information,
@@ -64,10 +70,10 @@ namespace SAI.LogModule.Services {
 		/// </summary>
 		private void LogWithContext(EnLogType level, string componentName, string message, string correlationId, string memberName, int lineNumber) {
 			componentName = string.IsNullOrEmpty(componentName)
-				? new string(' ', fixedLengthForComponentName) // If the component name is empty, fill it with spaces
-				: componentName.Length > fixedLengthForComponentName
-					? componentName[^fixedLengthForComponentName..] //If it was longer than the fixed length, take the last characters
-					: componentName.PadLeft(fixedLengthForComponentName); // If it was shorter, add spaces to the left
+				? new string(' ', _fixedLengthForComponentName) // If the component name is empty, fill it with spaces
+				: componentName.Length > _fixedLengthForComponentName
+					? componentName[^_fixedLengthForComponentName..] //If it was longer than the fixed length, take the last characters
+					: componentName.PadLeft(_fixedLengthForComponentName); // If it was shorter, add spaces to the left
 			using (LogContext.PushProperty("ComponentName", componentName))
 			using (LogContext.PushProperty("CorrelationId", correlationId))
 			using (LogContext.PushProperty("MemberName", memberName))

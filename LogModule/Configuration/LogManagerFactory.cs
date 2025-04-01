@@ -3,6 +3,8 @@ using SAI.LogModule.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
+using Microsoft.Extensions.Logging;
+using SAI.LogModule.Model;
 
 namespace SAI.LogModule.Configuration {
 	/// <summary>
@@ -13,21 +15,44 @@ namespace SAI.LogModule.Configuration {
 		/// Creates an instance of LogsManager based on the internal Serilog configuration.
 		/// </summary>
 		/// <returns>Instance of LogsManager.</returns>
-		public static IServiceCollection CreateLogsManager(this IServiceCollection services,IConfiguration configuration) {
-			// Configure Serilog using settings
-			Log.Logger = new LoggerConfiguration()
+		public static IServiceCollection CreateLogsManager(this IServiceCollection services, IConfiguration configuration) {
+			var logConfig = configuration.GetSection("LogConfig").Get<LogConfig>();
+
+			if (logConfig == null) {
+				logConfig = new LogConfig();
+			}
+
+			var serilogConfig = new ConfigurationBuilder()
+				.AddConfiguration(configuration)
+				.Build();
+
+			if (!string.IsNullOrEmpty(logConfig.LogServiceFilePath)) {
+				string logPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ServiceLog\\logMT5.txt");
+
+				var section = serilogConfig.GetSection("Serilog:WriteTo");
+				foreach (var item in section.GetChildren()) {
+					if (item.GetValue<string>("Name") == "File") {
+						item.GetSection("Args").GetSection("path").Value = logPath;
+					}
+				}
+			}
+			Serilog.ILogger logger = new LoggerConfiguration()
 				.ReadFrom.Configuration(configuration)
+				.Enrich.FromLogContext()
 				.CreateLogger();
-			Log.Information("Logger initialized.");
+
+			logger.Information("Logger initialized.");
 
 			// Register Serilog as the logging provider
 			services.AddLogging(loggingBuilder => {
-				loggingBuilder.AddSerilog(Log.Logger, dispose: true);
+				loggingBuilder.ClearProviders();
+				if (logConfig.AddSerilog)
+					loggingBuilder.AddSerilog(logger);
 			});
 
 			// Register LogsManager with Serilog's ILogger
-			services.AddSingleton<ILogger>(Log.Logger);
-			services.AddSingleton<ILogsManager, LogsManager>();
+			services.AddSingleton<Serilog.ILogger>(logger);
+			services.AddSingleton<ILogsManager>(provider => new LogsManager(logger, logConfig.FixedLengthForComponentName));
 
 			return services;
 		}
